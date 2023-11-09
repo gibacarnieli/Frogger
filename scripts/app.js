@@ -89,6 +89,9 @@ const car = ['car']
 
 
 // ! Variables
+
+// all variables from my project.
+
 const startPos = 94
 let currentPos = startPos
 let lives = 3
@@ -99,33 +102,37 @@ let moveCars
 let removeCar
 let checkCollisions
 
-const width = 10 // this is both the width and height of our board
-const cellCount = width * width // this variable represents the number of cells in our grid
-const carImage = '<img class="car" src="./assets/car.png">'
+const width = 10 // this is both the width and height of my board
+const cellCount = width * width // this variable represents the number of cells in my grid
+const carImage = '<img class="car" src="./assets/car.png">'  // image from the car that pass at the road
 const carSpeed = 200 // Adjust the speed as needed
-const carPositions = [19, 39, 69, 89]
-const carEndPosition = [10, 30, 60, 80]
+const carPositions = [19, 39, 69, 89]  // position that the car start
+const carEndPosition = [10, 30, 60, 80] // cell that the car finish
 
 
 let carInterval
 const carDirection = -1  // 1 for right, -1 for left
 
 
+
+// function for reset all variables of the game
+
 function resetVariables() {
   clearInterval(gameInterval)
-  removeCars() // Change from removeCar to removeCars
+  removeCars() 
   score = 0
   scoreDisplay.innerText = score
   lives = 3
   livesDisplay.innerText = '❤️❤️❤️'
 }
 
-
+// audio that will be played a soon rich the start botton.
 function playAudio() {
   const audio = document.createElement('audio')
   audio.src = 'cowboy.mp3'
   audio.play()
 }
+
 
 function startGame(evt) {
   if (!gameActive) {
@@ -136,9 +143,9 @@ function startGame(evt) {
     addCars()
     moveCar()
     gameInterval = setInterval(() => {
-      const crash = true // Add logic to determine if frog was crashvby car
+      const crash = removeFrog()
       if (crash) {
-        lives--
+        lives -= 1
         livesDisplay.innerText = lives ? '❤️'.repeat(lives) : '💔'
         if (lives === 0) {
           endGame()
@@ -150,7 +157,7 @@ function startGame(evt) {
   }
 }
 
-
+// function for add the cars at the grid
 function addCars() {
   carPositions.forEach((carPositions) => {
     cells[carPositions].classList.add('car')
@@ -195,7 +202,7 @@ function checkForCollision() {
     if (position === currentPos) {
       // Collision detected
       removeFrog()
-      lives--
+      lives = -1
       livesDisplay.innerText = lives ? '❤️'.repeat(lives) : '💔'
       if (lives === 0) {
         endGame()
@@ -225,7 +232,7 @@ function createGrid() {
 
 // ! Executions
 const frogImage = '<img class="frog" src="./assets/froggy.png">'
-console.log(frogImage)
+
 
 function addFrog() {
   cells[currentPos].classList.add('frog')
@@ -240,9 +247,9 @@ function addFrog() {
     }
   }
   
-  // Check for crossing the street
+  
   if (currentPos < width) {
-    // Increase the score when the frog crosses the street
+    // Increase the score when the frog crosses to the final column of the grid
     score += 100
     scoreDisplay.innerText = score
     removeFrog()
@@ -261,12 +268,12 @@ function addFrog() {
 
 
 function removeFrog() {
-  const cell = cells[currentPos] // Assuming cells is an array of HTML elements
+  const cell = cells[currentPos] 
   cell.innerHTML = cell.innerHTML.replace(frogImage, '')
   cell.classList.remove('frog') // Remove the 'frog' class
 }
 
-// On keypress update cat position
+// On keypress update cat position / move frog
 function keyPress(evt) {
   const key = evt.code
 
@@ -286,7 +293,7 @@ function keyPress(evt) {
 }
 
 
-
+// function for finish the game
 function endGame() {
   // Clear gameInterval
   clearInterval(gameInterval)
@@ -297,13 +304,13 @@ function endGame() {
     removeFrog()
     // Set game to inactive
     gameActive = false
-  })
+  },5)
 }
 
 
 // ! Events
 // Keypress events
-// These events happen on the document rather than on an element
+
 
 document.addEventListener('keydown', keyPress)
 startBtn.addEventListener('click', startGame)
@@ -314,3 +321,4 @@ startBtn.addEventListener('click', startGame)
 createGrid()
 moveCar()
 
+highScoreDisplay.innerText = localStorage.getItem('high-score')
