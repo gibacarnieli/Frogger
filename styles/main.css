@@ -1,0 +1,97 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.grid-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url(../assets/png-transparent-lake-and-tall-trees-lake-beautiful-blue-lake-blue-lake-blue-landscape-apartment-thumbnail_clipdrop-background-removal.png);
+  background-size: cover;
+}
+
+.grid {
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+  width: 600px;
+}
+
+.grid div {
+  display: inline-block;
+  aspect-ratio: 1;
+
+}
+
+
+.controls-wrapper {
+  height: 10vh;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.grid div:nth-child(n+31):nth-child(-n+40) {
+  background-image: url(../assets/straight-road-travel-concept-illustration-png.webp);
+  background-size: cover;
+}
+
+.grid div:nth-child(n+61):nth-child(-n+70) {
+  background-image: url(../assets/straight-road-travel-concept-illustration-png.webp);
+  background-size: cover;
+}
+
+.grid div:nth-child(n+81):nth-child(-n+90) {
+  background-image: url(../assets/straight-road-travel-concept-illustration-png.webp);
+  background-size: cover;
+}
+.grid div:nth-child(n+11):nth-child(-n+20) {
+  background-image: url(../assets/straight-road-travel-concept-illustration-png.webp);
+  background-size: cover;
+}
+
+.grid div:nth-child(n+0):nth-child(-n+10) {
+  background-image: url(../assets/pngtree-winner-frame-label-shiny-banner-with-glowing-lamps-png-image_4654824.jpeg);
+  background-size: cover;
+}
+
+.frog {
+  position: relative;
+}
+
+
+.frog::after {
+
+  content:'';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('../assets/froggy.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 100%;
+  z-index: 10;
+}
+.car {
+  position: relative;
+}
+.car::after {
+
+  content:'';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('../assets/car.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 100%;
+  z-index: 10;
+}
