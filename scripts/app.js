@@ -75,89 +75,95 @@
 // ! Elements
 // #start
 const startBtn = document.getElementById('start')
-
-// #lives-display
 const livesDisplay = document.getElementById('lives-display')
-// #score-display
 const scoreDisplay = document.getElementById('score-display')
-// High score
 const highScoreDisplay = document.querySelector('.high-score')
-
 const grid = document.querySelector('.grid')
 const cells = []
-const car = ['car']
+
+
 
 
 // ! Variables
-
-// all variables from my project.
-
 const startPos = 94
 let currentPos = startPos
-let lives = 3
+let live = 1
 let score = 0
 let gameInterval
+let level = 1
+const maxLevels = 5
+
 let gameActive = false
 let moveCars
 let removeCar
 let checkCollisions
+let audio
 
-const width = 10 // this is both the width and height of my board
-const cellCount = width * width // this variable represents the number of cells in my grid
-const carImage = '<img class="car" src="./assets/car.png">'  // image from the car that pass at the road
+const width = 10 // this is both the width and height of our board
+const cellCount = width * width // this variable represents the number of cells in our grid
+const carImage = '<img class="car" src="./assets/car.png">'
 const carSpeed = 200 // Adjust the speed as needed
-const carPositions = [19, 39, 69, 89]  // position that the car start
-const carEndPosition = [10, 30, 60, 80] // cell that the car finish
-
+const carPositions = [19, 39, 69, 89]
+const carEndPosition = [10, 30, 60, 80]
+let hitByCar = false
 
 let carInterval
 const carDirection = -1  // 1 for right, -1 for left
 
-
-
-// function for reset all variables of the game
-
-function resetVariables() {
+function resetGame() {
   clearInterval(gameInterval)
-  removeCars() 
+  clearInterval(carInterval)
+  removeFrog()
+  removeCars()
   score = 0
   scoreDisplay.innerText = score
-  lives = 3
-  livesDisplay.innerText = '❤️❤️❤️'
+  live = 1
+  livesDisplay.innerText = '❤️'
+  level = 1 // Reset the level
+  gameActive = false
 }
 
-// audio that will be played a soon rich the start botton.
+// i added a loop for the music dont stop during the game and stop when the player win or lose
 function playAudio() {
-  const audio = document.createElement('audio')
-  audio.src = 'cowboy.mp3'
+  audio = new Audio('cowboy.mp3')
+  audio.loop = true // Set loop to true to make the music play continuously
   audio.play()
 }
 
+// i added a function for the start button be inative while the player is playing
+function updateStartButton() {
+  startBtn.disabled = gameActive
+}
 
-function startGame(evt) {
+function startGame() {
   if (!gameActive) {
-    resetVariables()
+    // Disable the start button
+    startBtn.disabled = true
+    resetGame()
     gameActive = true
     playAudio()
-    removeCar()
-    addCars()
+    addFrog(startPos)
     moveCar()
     gameInterval = setInterval(() => {
-      const crash = removeFrog()
-      if (crash) {
-        lives -= 1
-        livesDisplay.innerText = lives ? '❤️'.repeat(lives) : '💔'
-        if (lives === 0) {
-          endGame()
+      checkForCollision()
+      if (currentPos < width) {
+        if (level >= maxLevels) {
+          endGame(true) // End the game with a victory message
         } else {
+          alert(`Level ${level} passed!`)
+          level++
+          score += 100 // Increment the score by 100
+          scoreDisplay.innerText = score
+          removeFrog()
+          currentPos = startPos
           addFrog(startPos)
         }
       }
-    }, 1) 
+    }, 1)
   }
 }
 
-// function for add the cars at the grid
+
 function addCars() {
   carPositions.forEach((carPositions) => {
     cells[carPositions].classList.add('car')
@@ -189,7 +195,6 @@ function removeCars() {
 }
 
 
-
 function moveCar() {
   carInterval = setInterval(() => {
     removeCars()
@@ -197,25 +202,26 @@ function moveCar() {
   }, carSpeed)
 }
 
+
 function checkForCollision() {
   carPositions.forEach(position => {
-    if (position === currentPos) {
-      // Collision detected
+    if (position === currentPos && !hitByCar) {
+      hitByCar = true // Flag that the frog has been hit by a car
       removeFrog()
-      lives = -1
-      livesDisplay.innerText = lives ? '❤️'.repeat(lives) : '💔'
-      if (lives === 0) {
-        endGame()
+      live--
+      livesDisplay.innerText = '❤️'.repeat(live) + '💔' // Update the lives display
+      if (live === 0) {
+        endGame(false) // Indicate game over (not a victory)
       } else {
         addFrog(startPos)
       }
     }
   })
+  hitByCar = false // Reset the flag after the move
 }
 
 
 
-// This function will create all of the grid cells and append them to the existing grid
 function createGrid() {
   for (let i = 0; i < cellCount; i++) {
     const cell = document.createElement('div')
@@ -224,47 +230,31 @@ function createGrid() {
     grid.append(cell)
     cells.push(cell)
   }
-  addFrog(startPos)
-  addCars() // Add cars as obstacles
 }
 
-
+let currentHighScore
 
 // ! Executions
 const frogImage = '<img class="frog" src="./assets/froggy.png">'
+console.log(frogImage)
 
 
 function addFrog() {
-  cells[currentPos].classList.add('frog')
-  
-  // Check for collision with a car
-  if (cells[currentPos].classList.contains('car')) {
-    // Remove a life
-    lives -= 1
-    livesDisplay.innerText = lives ? '❤️'.repeat(lives) : '💔'
-    if (lives === 0) {
-      endGame()
+  if (gameActive) {
+    cells[currentPos].classList.add('frog')
+
+    if (currentPos < width) {
+      if (level >= maxLevels) {
+        endGame(true) // End game with a victory message
+        if (score > currentHighScore) {
+          localStorage.setItem('high-score', score)
+          highScoreDisplay.innerText = score
+        }
+      }
     }
-  }
-  
-  
-  if (currentPos < width) {
-    // Increase the score when the frog crosses to the final column of the grid
-    score += 100
-    scoreDisplay.innerText = score
-    removeFrog()
-  
-    // Check for the high score and update it if necessary
-    const currentHighScore = parseInt(localStorage.getItem('high-score')) || 0
-    if (score > currentHighScore) {
-      localStorage.setItem('high-score', score)
-      highScoreDisplay.innerText = score
-    }
-  
-    // Reset the frog's position
-    currentPos = startPos
   }
 }
+
 
 
 function removeFrog() {
@@ -273,44 +263,55 @@ function removeFrog() {
   cell.classList.remove('frog') // Remove the 'frog' class
 }
 
-// On keypress update cat position / move frog
+// On keypress update cat position, remove the frog before the game start
 function keyPress(evt) {
-  const key = evt.code
+  if (gameActive) {
+    const key = evt.code
+    
+    removeFrog()
 
+    if (key === 'ArrowUp' && currentPos >= width) {
+      currentPos -= width
+    } else if (key === 'ArrowDown' && currentPos + width < cellCount) {
+      currentPos += width
+    } else if (key === 'ArrowLeft' && currentPos % width !== 0) {
+      currentPos--
+    } else if (key === 'ArrowRight' && currentPos % width !== width - 1) {
+      currentPos++
+    }
+
+    addFrog()
+  }
+}
+
+//  end game now with alert for when the player go to the level 5
+function endGame(isVictory = false) {
+  clearInterval(gameInterval)
+  clearInterval(carInterval)
   removeFrog()
+  gameActive = false
 
-  if (key === 'ArrowUp' && currentPos >= width) {
-    currentPos -= width
-  } else if (key === 'ArrowDown' && currentPos + width < cellCount) {
-    currentPos += width
-  } else if (key === 'ArrowLeft' && currentPos % width !== 0) {
-    currentPos--
-  } else if (key === 'ArrowRight' && currentPos % width !== width - 1) {
-    currentPos++
+  startBtn.disabled = false
+
+  // Stop the audio
+  if (audio) {
+    audio.pause()
   }
 
-  addFrog()
+  if (isVictory) {
+    alert(`Congratulations! You've reached level 5 and won the game with a score of ${score} points!`)
+  } else {
+    alert(`GAME OVER! Your score: ${score} points`)
+  }
+
+  resetGame()
 }
 
-
-// function for finish the game
-function endGame() {
-  // Clear gameInterval
-  clearInterval(gameInterval)
-
-  // Alert game over
-  setTimeout(() => {
-    alert(`GAME OVER!!!!\nYou scored ${score} points!`)
-    removeFrog()
-    // Set game to inactive
-    gameActive = false
-  },5)
-}
 
 
 // ! Events
 // Keypress events
-
+// These events happen on the document rather than on an element
 
 document.addEventListener('keydown', keyPress)
 startBtn.addEventListener('click', startGame)
@@ -319,6 +320,4 @@ startBtn.addEventListener('click', startGame)
 
 // ! Page Load
 createGrid()
-moveCar()
-
 highScoreDisplay.innerText = localStorage.getItem('high-score')
