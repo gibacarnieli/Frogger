@@ -150,7 +150,7 @@ function startGame() {
         if (level >= maxLevels) {
           endGame(true) // End the game with a victory message
         } else {
-          alert(`Level ${level} passed!`)
+          alert(`Level ${level} passed!, You got 100 points extra`)
           level++
           score += 100 // Increment the score by 100
           scoreDisplay.innerText = score
@@ -299,7 +299,7 @@ function endGame(isVictory = false) {
   }
 
   if (isVictory) {
-    alert(`Congratulations! You've reached level 5 and won the game with a score of ${score} points!`)
+    alert(`Congratulations! You've reached level 5 and you smashed my game with a score of ${score} points!`)
   } else {
     alert(`GAME OVER! Your score: ${score} points`)
   }
