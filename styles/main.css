@@ -12,10 +12,18 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url(../assets/png-transparent-lake-and-tall-trees-lake-beautiful-blue-lake-blue-lake-blue-landscape-apartment-thumbnail_clipdrop-background-removal.png);
+  background-image: url(../assets/flores.png);
   background-size: cover;
 }
 
+#logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 10px; /* Add margin for spacing from the edges */
+  width: 100px; /* Adjust the width as needed */
+  height: auto; /* Maintain aspect ratio */
+}
 .grid {
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
   width: 600px;
@@ -32,6 +40,7 @@ body {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  background-color: olive;
 }
 
 .grid div:nth-child(n+31):nth-child(-n+40) {
@@ -54,7 +63,7 @@ body {
 }
 
 .grid div:nth-child(n+0):nth-child(-n+10) {
-  background-image: url(../assets/pngtree-winner-frame-label-shiny-banner-with-glowing-lamps-png-image_4654824.jpeg);
+  background-image: url(../assets/log_clipdrop-background-removal.png);
   background-size: cover;
 }
 
@@ -94,3 +103,4 @@ body {
   width: 100%;
   z-index: 10;
 }
+

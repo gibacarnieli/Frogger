@@ -75,6 +75,7 @@
 // ! Elements
 // #start
 const startBtn = document.getElementById('start')
+const stopBtn = document.getElementById('stop')
 const livesDisplay = document.getElementById('lives-display')
 const scoreDisplay = document.getElementById('score-display')
 const highScoreDisplay = document.querySelector('.high-score')
@@ -92,6 +93,7 @@ let score = 0
 let gameInterval
 let level = 1
 const maxLevels = 5
+let collisionSound
 
 let gameActive = false
 let moveCars
@@ -102,9 +104,10 @@ let audio
 const width = 10 // this is both the width and height of our board
 const cellCount = width * width // this variable represents the number of cells in our grid
 const carImage = '<img class="car" src="./assets/car.png">'
-const carSpeed = 200 // Adjust the speed as needed
+const carSpeed = 100 // Adjust the speed as needed
 const carPositions = [19, 39, 69, 89]
 const carEndPosition = [10, 30, 60, 80]
+
 let hitByCar = false
 
 let carInterval
@@ -129,6 +132,17 @@ function playAudio() {
   audio.loop = true // Set loop to true to make the music play continuously
   audio.play()
 }
+
+function stopAudio() {
+  if (audio) {
+    audio.pause()
+  }
+}
+
+function loadSounds() {
+  collisionSound = new Audio('agressive.mp3') // Replace 'collision.mp3' with the path to your collision sound file
+}
+
 
 // i added a function for the start button be inative while the player is playing
 function updateStartButton() {
@@ -199,7 +213,23 @@ function moveCar() {
   carInterval = setInterval(() => {
     removeCars()
     addCars()
+    adjustCarSpeed() // Adjust car speed based on level
   }, carSpeed)
+}
+
+function adjustCarSpeed() {
+  // Increase car speed for higher levels (you can adjust the formula as needed)
+  const adjustedSpeed = carSpeed - (level - 1) * 20
+  
+  // Ensure the speed doesn't go below a minimum value
+  const minSpeed = 80
+  const finalSpeed = Math.max(adjustedSpeed, minSpeed)
+
+  clearInterval(carInterval)
+  carInterval = setInterval(() => {
+    removeCars()
+    addCars()
+  }, finalSpeed)
 }
 
 
@@ -207,6 +237,7 @@ function checkForCollision() {
   carPositions.forEach(position => {
     if (position === currentPos && !hitByCar) {
       hitByCar = true // Flag that the frog has been hit by a car
+      playCollisionSound() // Play the collision sound
       removeFrog()
       live--
       livesDisplay.innerText = '❤️'.repeat(live) + '💔' // Update the lives display
@@ -220,6 +251,11 @@ function checkForCollision() {
   hitByCar = false // Reset the flag after the move
 }
 
+function playCollisionSound() {
+  if (collisionSound) {
+    collisionSound.play()
+  }
+}
 
 
 function createGrid() {
@@ -231,6 +267,8 @@ function createGrid() {
     cells.push(cell)
   }
 }
+
+
 
 let currentHighScore
 
@@ -315,8 +353,9 @@ function endGame(isVictory = false) {
 
 document.addEventListener('keydown', keyPress)
 startBtn.addEventListener('click', startGame)
+stopBtn.addEventListener('click', stopAudio)
 
-
+document.addEventListener('DOMContentLoaded', loadSounds)
 
 // ! Page Load
 createGrid()
