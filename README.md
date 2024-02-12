@@ -40,7 +40,7 @@ The main difficulty here was to animate the obstacles and detect the collisions.
 
  ! Elements
  current-score (this will be the span tracking current score made)
- progress ( i will try add a level count))
+ progress ( I will try add a level count))
  amount-life-remaining (span that tracks the amount left life)
  button (start the game)
  obstacle for the frogger pass
@@ -58,15 +58,11 @@ completion (number) - the final score from the user (alert window)
 ! Grid
 * Making a grid in JS
 
-
  This function will create all the grid cells and append them to the existing grid
-
 
  Set width and height of the div cells, grid will 6 rows for the levels
 
-
  will be a grid without cell number visible, for track if he still can go up, left, down
-
 
  obstacle in 3 different lines are my plan, for be more interesting
 
