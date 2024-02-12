@@ -123,7 +123,7 @@ I learned how to implement randomness for moving the obstacles.
 
 I didn't observe any bugs but I would like to continue working on it to enhance the visual appeal of my game.
 
-## Improvments
+## Improvements
 
 I would like to add more functionalities to my game, such as pop-ups, crash sounds, and victory sounds.
 
