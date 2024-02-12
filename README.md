@@ -1,8 +1,6 @@
 # Frogger
 
-
-## Sections
-Description:
+## Description:
 
 Frogger is an arcade game where the objective is to navigate through traffic without being hit by obstacles. If you are fortunate enough to reach the final destination, where the winners are, you will score 100 points for each successful attempt, until you exhaust your lives.
 
